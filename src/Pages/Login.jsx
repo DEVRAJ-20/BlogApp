@@ -1,11 +1,12 @@
 import React from "react";
-import {Login as LoginComponent}from"../Components/index";
-function login() {
-  return (
-    <div className="py-8">
-        <LoginComponent />
-    </div>
+import { Login as LoginComponent } from "../Components/index";
 
-  )
+function Login() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-pink-100 flex items-center justify-center px-4">
+      <LoginComponent />
+    </div>
+  );
 }
-export default login;
+
+export default Login;
