@@ -1,19 +1,23 @@
 import React from 'react';
 import appwriteService from '../appwrite/Config';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function PostCard({ $id, title, featuredImage, user, author }) {
   const imageUrl = appwriteService.getFilePreview(featuredImage);
   const userData = useSelector((state) => state.auth.userData);
   const isAuthor = userData?.$id === user;
+  const navigate = useNavigate(); // ⬅️ Add this line
+  console.log("PostCard :: imageUrl", imageUrl);
+  console.log("PostCard :: featuredImage ID", featuredImage);
 
   const handleDelete = async () => {
     const confirmed = window.confirm("Are you sure you want to delete this post?");
     if (confirmed) {
       const deleted = await appwriteService.deletePost($id);
       if (deleted) {
-        window.location.reload(); // Refresh the list
+        
+        navigate("/all-posts");
       }
     }
   };
