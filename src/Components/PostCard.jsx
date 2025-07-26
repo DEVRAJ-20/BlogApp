@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function PostCard({ $id, title, featuredImage, user, author }) {
-  const imageUrl = appwriteService.getFilePreview(featuredImage);
+  const imageUrl = appwriteService.getFileView(featuredImage);
   const userData = useSelector((state) => state.auth.userData);
   const isAuthor = userData?.$id === user;
   const navigate = useNavigate(); // ⬅️ Add this line

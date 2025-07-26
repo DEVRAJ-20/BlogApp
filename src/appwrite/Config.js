@@ -10,7 +10,8 @@ export class Service {
         this.client
             .setEndpoint(conf.appwriteEndpoint)
             .setProject(conf.appwriteProjectId);
-
+        
+        console.log("Bucket ID:", conf.appwriteBucketId);
         this.databases = new Databases(this.client);
         this.bucket = new Storage(this.client);
     }
@@ -127,14 +128,15 @@ export class Service {
         }
     }
 
-    getFilePreview(fileId) {
+    getFileView(fileId) {
         try {
-            return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
+            return this.bucket.getFileView(conf.appwriteBucketId, fileId);
         } catch (e) {
-            console.error("Image error:", e);
+            console.error("Appwrite Service :: getFileView :: error", e);
             return null;
         }
     }
+    
 }
 
 const service = new Service();
