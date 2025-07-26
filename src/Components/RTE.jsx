@@ -13,7 +13,7 @@ export default function RTE({name, control, label, defaultValue =""}) {
     render={({field: {onChange}}) => (
         <Editor
         initialValue={defaultValue}
-        apiKey='zxb8q2tzm8gvnd8xkgxo6pm9to4jsfmlsughrx8aak17tjpu'
+        apiKey='9m2bauagcbpcin794ozpgyvoi75z41zd41zf3ew9as5exog5'
       init={{
         plugins: [
          "image",
