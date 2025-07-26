@@ -15,6 +15,7 @@ export default function PostForm({ post }) {
     getValues,
   } = useForm({
     defaultValues: {
+      author: post?.author || "",
       title: post?.title || "",
       slug: post?.$id || "",
       content: post?.content || "",
@@ -29,31 +30,34 @@ export default function PostForm({ post }) {
     const file = data.image?.[0]
       ? await appwriteService.uploadFile(data.image[0])
       : null;
-
+  
     if (post) {
       if (file) {
         await appwriteService.deleteFile(post.featuredImage);
       }
-
+  
       const updated = await appwriteService.updatePost(post.$id, {
         ...data,
         featuredImage: file ? file.$id : post.featuredImage,
       });
-
+  
       if (updated) navigate(`/post/${updated.$id}`);
     } else {
       if (!file) return;
-      data.featuredImage = file.$id;
-      console.log("Submitting Post with Data:", data, userData);
-
-      const created = await appwriteService.createPost({
+  
+      const newPostData = {
         ...data,
-        userid: userData.$id,
-      });
-      console.log("Created post:", created);
+        featuredImage: file.$id,
+        userId: userData?.$id || "",  // ✅ Required by Appwrite
+        author: data.author,        // ✅ FIXED HERE
+      };
+      console.log("Creating post with user ID:", userData?.$id);
+  
+      const created = await appwriteService.createPost(newPostData);
       if (created) navigate(`/post/${created.$id}`);
     }
   };
+  
 
   const slugTransform = useCallback((value) => {
     return value
@@ -82,6 +86,13 @@ export default function PostForm({ post }) {
     >
       {/* Left Side */}
       <div className="flex-1">
+        <Input
+          label="Author Name"
+          placeholder="Enter your name"
+          className="mb-4"
+          {...register("author", { required: true })}
+        />
+
         <Input
           label="Title"
           placeholder="Enter your post title"

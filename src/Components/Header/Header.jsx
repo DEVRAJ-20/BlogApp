@@ -16,22 +16,26 @@ function Header() {
   ];
 
   return (
-    <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 shadow-md sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-indigo-900 via-fuchsia-800 to-indigo-700 text-white shadow-md sticky top-0 z-50">
       <Container>
         <nav className="flex items-center justify-between py-4">
-          {/* Left: Site Title */}
-          <div className="text-white font-semibold text-lg sm:text-xl tracking-wide">
-            Blogs
+          
+          {/* Logo / Brand */}
+          <div
+            className="text-2xl font-bold tracking-tight cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigate("/")}
+          >
+            <span className="text-fuchsia-400">Blog</span>App
           </div>
 
-          {/* Right: Navigation */}
-          <ul className="flex items-center gap-6 text-white text-sm sm:text-base font-medium">
+          {/* Navigation Menu */}
+          <ul className="flex items-center gap-4 sm:gap-6 text-sm sm:text-base">
             {navItems.map((item) =>
               item.active ? (
                 <li key={item.name}>
                   <button
                     onClick={() => navigate(item.slug)}
-                    className="px-4 py-2 rounded-full hover:bg-white hover:text-gray-800 transition-all duration-200"
+                    className="px-4 py-2 rounded-full bg-transparent border border-white text-white font-medium hover:bg-white hover:text-indigo-900 transition-all duration-200"
                   >
                     {item.name}
                   </button>
@@ -39,6 +43,7 @@ function Header() {
               ) : null
             )}
 
+            {/* Logout if logged in */}
             {authStatus && (
               <li>
                 <LogoutBtn />
