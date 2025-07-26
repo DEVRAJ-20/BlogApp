@@ -44,10 +44,13 @@ export default function PostForm({ post }) {
     } else {
       if (!file) return;
       data.featuredImage = file.$id;
+      console.log("Submitting Post with Data:", data, userData);
+
       const created = await appwriteService.createPost({
         ...data,
         userid: userData.$id,
       });
+      console.log("Created post:", created);
       if (created) navigate(`/post/${created.$id}`);
     }
   };

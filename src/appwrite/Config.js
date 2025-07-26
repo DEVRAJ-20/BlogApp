@@ -13,23 +13,31 @@ export class Service{
         this.databases = new Databases(this.client);
         this.bucket = new Storage(this.client);
     }
-async createPost({ title, slug, content, featuredImage, status, userid }) {
-    return await this.databases.createDocument(
-        conf.appwriteDatabaseId,
-        conf.appwriteCollectionId,
-        slug,
-        {
-            title,
-            content,
-            featuredImage,
-            status,
-            userid,  
+    async createPost({ title, slug, content, featuredImage, status, userid }) {
+        try {
+            return await this.databases.createDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                slug,
+                {
+                    title,
+                    content,
+                    featuredImage,
+                    status,
+                    user: userid,  // ✅ Rename this key to "user"
+                },
+                [
+                    Permission.read(Role.any()),
+                    Permission.update(Role.user(userid)),
+                    Permission.delete(Role.user(userid)),
+                ]
+            );
+        } catch (error) {
+            console.log("Appwrite service :: createPost :: error", error);
+            return false;
         }
-    );
-}
- catch (error) {
-            console.log("Appwrite serive :: createPost :: error", error);
-        }
+    }
+    
  
 
     async updatePost(slug, {title, content, featuredImage, status}){
@@ -82,6 +90,7 @@ async createPost({ title, slug, content, featuredImage, status, userid }) {
 
     async getPosts(queries = [Query.equal("status", "active")]){
         try {
+            console.log("Fetching posts with query:", queries);
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,

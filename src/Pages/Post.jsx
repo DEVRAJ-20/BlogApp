@@ -9,24 +9,18 @@ export default function Post() {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
-
     const userData = useSelector((state) => state.auth?.userData);
-
-
-  const isAuthor = post && userData ? post.userid === userData.$id : false;
-
-
-
+    const isAuthor = post && userData ? post.userid === userData.$id : false;
 
     useEffect(() => {
         if (slug) {
-            
             appwriteService.getPost(slug).then((post) => {
-                console.log("Post from Appwrite:", post);
                 if (post) setPost(post);
                 else navigate("/");
             });
-        } else navigate("/");
+        } else {
+            navigate("/");
+        }
     }, [slug, navigate]);
 
     const deletePost = () => {
@@ -39,34 +33,48 @@ export default function Post() {
     };
 
     return post ? (
-        <div className="py-8">
+        <div className="py-10 bg-gradient-to-br from-white via-pink-50 to-indigo-100 min-h-screen">
             <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
-                    <img
-                        src={appwriteService.getFilePreview(post.featuredImage)}
-                        alt={post.title}
-                        className="rounded-xl"
-                    />
-
-                    {isAuthor && (
-                        <div className="absolute right-6 top-6">
-                            <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-green-500" className="mr-3">
-                                    Edit
-                                </Button>
-                            </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
-                                Delete
-                            </Button>
-                        </div>
-                    )}
-                </div>
-                <div className="w-full mb-6">
-                    <h1 className="text-2xl font-bold">{post.title}</h1>
-                </div>
-                <div className="browser-css">
-                    {parse(post.content)}
+                <div className="w-full mx-auto max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden">
+                    
+                    {/* Feature Image */}
+                    <div className="w-full bg-gray-100">
+                        <img
+                            src={appwriteService.getFilePreview(post.featuredImage)}
+                            alt={post.title}
+                            className="w-full max-h-[450px] object-contain object-center mx-auto bg-white"
+                        />
                     </div>
+
+                    {/* Post Content */}
+                    <div className="p-6">
+                        {/* Title & Buttons */}
+                        <div className="flex justify-between items-start mb-4">
+                            <h1 className="text-3xl font-bold text-gray-800">{post.title}</h1>
+                            {isAuthor && (
+                                <div className="flex gap-2">
+                                    <Link to={`/edit-post/${post.$id}`}>
+                                        <Button bgColor="bg-green-500" className="text-sm px-3 py-1 rounded">
+                                            Edit
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        bgColor="bg-red-500"
+                                        className="text-sm px-3 py-1 rounded"
+                                        onClick={deletePost}
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Post Content HTML */}
+                        <div className="prose prose-lg max-w-none text-gray-700">
+                            {parse(post.content)}
+                        </div>
+                    </div>
+                </div>
             </Container>
         </div>
     ) : null;
