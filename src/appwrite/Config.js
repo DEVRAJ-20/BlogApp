@@ -129,7 +129,7 @@ export class Service {
 
     getFilePreview(fileId) {
         try {
-            return this.bucket.getFileView(conf.appwriteBucketId, fileId);
+            return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
         } catch (e) {
             console.error("Image error:", e);
             return null;
