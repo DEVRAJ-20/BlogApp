@@ -131,7 +131,7 @@ export default function PostForm({ post }) {
         {post?.featuredImage && (
           <div className="mb-4">
             <img
-              src={appwriteService.getFilePreview(post.featuredImage)}
+              src={appwriteService.getFileView(post.featuredImage)}
               alt="Preview"
               className="rounded-xl w-full h-auto shadow"
             />

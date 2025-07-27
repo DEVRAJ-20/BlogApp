@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 
 export default function Post() {
     const [post, setPost] = useState(null);
+    const [deleting, setDeleting] = useState(false);
+
     const { slug } = useParams();
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth?.userData);
@@ -23,13 +25,21 @@ export default function Post() {
         }
     }, [slug, navigate]);
 
-    const deletePost = () => {
-        appwriteService.deletePost(post.$id).then((status) => {
-            if (status) {
-                appwriteService.deleteFile(post.featuredImage);
+    const deletePost = async () => {
+        if (!post?.$id) return;
+        try {
+            setDeleting(true);
+            const deleted = await appwriteService.deletePost(post.$id);
+            if (deleted) {
+                await appwriteService.deleteFile(post.featuredImage);
+                setPost(null); // Ensure UI doesn't flash post content
                 navigate("/");
             }
-        });
+        } catch (err) {
+            console.error("Delete Error:", err);
+        } finally {
+            setDeleting(false);
+        }
     };
 
     return post ? (
@@ -40,7 +50,7 @@ export default function Post() {
                     {/* Feature Image */}
                     <div className="w-full bg-gray-100">
                         <img
-                            src={appwriteService.getFilePreview(post.featuredImage)}
+                            src={appwriteService.getFileView(post.featuredImage)}
                             alt={post.title}
                             className="w-full max-h-[450px] object-contain object-center mx-auto bg-white"
                         />
@@ -62,8 +72,9 @@ export default function Post() {
                                         bgColor="bg-red-500"
                                         className="text-sm px-3 py-1 rounded"
                                         onClick={deletePost}
+                                        disabled={deleting}
                                     >
-                                        Delete
+                                        {deleting ? "Deleting..." : "Delete"}
                                     </Button>
                                 </div>
                             )}

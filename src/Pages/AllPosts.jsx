@@ -15,6 +15,18 @@ function AllPosts() {
     });
   }, []);
 
+  const handleDelete = async (postId, fileId) => {
+    try {
+      const deleted = await appwriteService.deletePost(postId);
+      if (deleted) {
+        await appwriteService.deleteFile(fileId);
+        setPosts((prevPosts) => prevPosts.filter((post) => post.$id !== postId));
+      }
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-pink-50 to-indigo-100 py-10">
       <Container>
@@ -27,7 +39,12 @@ function AllPosts() {
         ) : posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
             {posts.map((post) => (
-              <PostCard key={post.$id} {...post} author={post.author} />
+              <PostCard
+                key={post.$id}
+                {...post}
+                author={post.author}
+                onDelete={() => handleDelete(post.$id, post.featuredImage)}
+              />
             ))}
           </div>
         ) : (
