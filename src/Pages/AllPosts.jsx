@@ -20,12 +20,15 @@ function AllPosts() {
       const deleted = await appwriteService.deletePost(postId);
       if (deleted) {
         await appwriteService.deleteFile(fileId);
+  
+        
         setPosts((prevPosts) => prevPosts.filter((post) => post.$id !== postId));
       }
     } catch (error) {
-      console.error("Failed to delete post:", error);
+      console.error("Error deleting post:", error);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-pink-50 to-indigo-100 py-10">
