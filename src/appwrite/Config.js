@@ -38,6 +38,7 @@ export class Service {
                     Permission.read(Role.any()), 
                     Permission.update(Role.user(userId)),
                     Permission.delete(Role.user(userId)),
+                    Permission.create(Role.user(userId)),
                 ]
             );
         } catch (error) {
