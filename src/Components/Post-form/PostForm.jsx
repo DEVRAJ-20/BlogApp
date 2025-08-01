@@ -48,8 +48,8 @@ export default function PostForm({ post }) {
       const newPostData = {
         ...data,
         featuredImage: file.$id,
-        userId: userData?.$id || "",  // ✅ Required by Appwrite
-        author: data.author,        // ✅ FIXED HERE
+        userId: userData?.$id || "",  
+        author: data.author,        
       };
       console.log("Creating post with user ID:", userData?.$id);
   

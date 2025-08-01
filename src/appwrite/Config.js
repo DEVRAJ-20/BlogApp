@@ -18,10 +18,13 @@ export class Service {
 
     async createPost({ title, slug, content, featuredImage, status, userId, author }) {
         try {
+            console.log("Creating post for user:", userId);
+
             if (!userId) {
                 throw new Error("User ID is missing. Cannot create post.");
             }
             return await this.databases.createDocument(
+                
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 ID.unique(),
@@ -38,10 +41,12 @@ export class Service {
                     Permission.read(Role.any()), 
                     Permission.update(Role.user(userId)),
                     Permission.delete(Role.user(userId)),
-                    Permission.create(Role.user(userId)),
+                    
                 ]
             );
         } catch (error) {
+            console.error("Post creation failed:", error);
+
             console.log("Appwrite service :: createPost :: error", error);
             return false;
         }
